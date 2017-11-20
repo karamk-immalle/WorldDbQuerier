@@ -31,7 +31,8 @@ namespace WorldDbQuerier
                 Console.WriteLine("Wat wilt u zien?");
                 Console.WriteLine("1. Het aantal landen aanwezig in de database.");
                 Console.WriteLine("2. Een lijst met alle landen aanwezig in de database.");
-                Console.WriteLine("3. exit");
+                Console.WriteLine("3. Zoek een land.");
+                Console.WriteLine("4. exit");
 
                 switch(Console.ReadLine())
                 {
@@ -102,6 +103,7 @@ namespace WorldDbQuerier
             MySqlConnection con = new MySqlConnection();
             con.ConnectionString = "Server=192.168.56.101;Port=3306;Database=world;Uid=imma;Pwd=immapwd;";
             con.Open();
+            Console.WriteLine("Please enter the name of the country:");
             string country = Console.ReadLine();
             string sql = "SELECT * FROM world.Country where name = @Name";
             MySqlCommand cmd = new MySqlCommand(sql, con);
@@ -115,7 +117,9 @@ namespace WorldDbQuerier
 
             while (rdr.Read())
             {
+                Console.WriteLine("  ");
                 Console.WriteLine(rdr["Code"] + ", " + rdr["Name"] + ", " + rdr["Continent"] + ", " + rdr["Region"] + ", " + rdr["SurfaceArea"] + ", " + rdr["IndepYear"] + ", " + rdr["Population"] + ", " + rdr["LifeExpectancy"] + ", " + rdr["GNP"] + ", " + rdr["GNPOld"] + ", " + rdr["LocalName"] + ", " + rdr["GovernmentForm"] + ", " + rdr["HeadOfState"] + ", " + rdr["Capital"] + ", " + rdr["Code2"] + ".");
+                Console.WriteLine("  ");
             }
 
         }
