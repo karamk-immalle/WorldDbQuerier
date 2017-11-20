@@ -5,7 +5,7 @@ namespace WorldDbQuerier
 {
     class Program
     {
-        static string version = "0.3";
+        static string version = "0.4";
         static int exit = 0;
 
         static void Main(string[] args)
@@ -42,6 +42,9 @@ namespace WorldDbQuerier
                         Readr();
                         break;
                     case "3":
+                        Search();
+                        break;
+                    case "4":
                         exit = 1;
                         break;
 
@@ -69,17 +72,9 @@ namespace WorldDbQuerier
         {
             MySqlConnection con = new MySqlConnection();
             con.ConnectionString = "Server=192.168.56.101;Port=3306;Database=world;Uid=imma;Pwd=immapwd;";
-
-            MySqlCommand cmd1 = new MySqlCommand();
-            cmd1.Connection = con;
-            cmd1.CommandText = "SELECT count(Country.name) from world.Country";
-
-
-
-
+            string sql = "SELECT count(Country.name) from world.Country";
+            MySqlCommand cmd1 = new MySqlCommand(sql, con);
             con.Open();
-
-
             Console.WriteLine(Convert.ToString(cmd1.ExecuteScalar()));
         }
 
@@ -90,10 +85,9 @@ namespace WorldDbQuerier
             conn.ConnectionString = "Server=192.168.56.101;Port=3306;Database=world;Uid=imma;Pwd=immapwd;";
 
             conn.Open();
-
-            MySqlCommand cmd2 = new MySqlCommand();
-            cmd2.Connection = conn;
-            cmd2.CommandText = "select * from world.Country";
+            string sql = "select * from world.Country";
+            MySqlCommand cmd2 = new MySqlCommand(sql,conn);
+            
 
             MySqlDataReader rdr = cmd2.ExecuteReader();
 
@@ -101,6 +95,29 @@ namespace WorldDbQuerier
             {
                 Console.WriteLine(rdr[1]);
             }
+        }
+
+        static void Search()
+        {
+            MySqlConnection con = new MySqlConnection();
+            con.ConnectionString = "Server=192.168.56.101;Port=3306;Database=world;Uid=imma;Pwd=immapwd;";
+            con.Open();
+            string country = Console.ReadLine();
+            string sql = "SELECT * FROM world.Country where name = @Name";
+            MySqlCommand cmd = new MySqlCommand(sql, con);
+            MySqlParameter param = new MySqlParameter();
+            param.ParameterName = "@Name";
+            param.Value = country;
+
+            cmd.Parameters.Add(param);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                Console.WriteLine(rdr["Code"] + ", " + rdr["Name"] + ", " + rdr["Continent"] + ", " + rdr["Region"] + ", " + rdr["SurfaceArea"] + ", " + rdr["IndepYear"] + ", " + rdr["Population"] + ", " + rdr["LifeExpectancy"] + ", " + rdr["GNP"] + ", " + rdr["GNPOld"] + ", " + rdr["LocalName"] + ", " + rdr["GovernmentForm"] + ", " + rdr["HeadOfState"] + ", " + rdr["Capital"] + ", " + rdr["Code2"] + ".");
+            }
+
         }
 
         }
